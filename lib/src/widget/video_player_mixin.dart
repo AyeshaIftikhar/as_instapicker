@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:insta_assets_picker/insta_assets_picker.dart';
+import 'package:as_instapicker/as_instapicker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_picker_library/wechat_picker_library.dart';
 

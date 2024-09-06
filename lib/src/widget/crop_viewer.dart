@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_assets_crop/insta_assets_crop.dart' as insta_crop_view;
-import 'package:insta_assets_picker/insta_assets_picker.dart';
-import 'package:insta_assets_picker/src/insta_assets_crop_controller.dart';
+import 'package:instacrop/instacrop.dart' as insta_crop_view;
+import 'package:as_instapicker/as_instapicker.dart';
+import 'package:as_instapicker/src/instacrop_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_picker_library/wechat_picker_library.dart';
@@ -24,7 +24,7 @@ class CropViewer extends StatefulWidget {
 
   final DefaultAssetPickerProvider provider;
   final AssetPickerTextDelegate textDelegate;
-  final InstaAssetsCropController controller;
+  final InstaCropController controller;
   final Widget loaderWidget;
   final double height, opacity;
   final ThemeData? theme;
@@ -45,7 +45,7 @@ class CropViewerState extends State<CropViewer> {
     super.deactivate();
   }
 
-  /// Save the crop parameters state in [InstaAssetsCropController]
+  /// Save the crop parameters state in [InstaCropController]
   /// to retrieve it if the asset is opened again
   /// and apply them at the exportation
   void saveCurrentCropChanges() {
@@ -130,7 +130,7 @@ class InnerCropView extends InstaAssetVideoPlayerStatefulWidget {
   });
 
   final insta_crop_view.CropInternal? cropParam;
-  final InstaAssetsCropController controller;
+  final InstaCropController controller;
   final AssetPickerTextDelegate textDelegate;
   final ThemeData? theme;
   final double height;

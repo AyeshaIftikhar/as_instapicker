@@ -1,8 +1,8 @@
 library insta_assets_picker;
 
 export 'src/assets_picker.dart';
-export 'src/insta_assets_crop_controller.dart'
-    show InstaAssetsExportDetails, InstaAssetsExportData, InstaAssetsCropData;
+export 'src/instacrop_controller.dart'
+    show InstaExportDetails, InstaExportData, InstaCropData;
 export 'src/widget/circle_icon_button.dart';
 export 'src/widget/crop_transform.dart';
 export 'src/widget/video_player_mixin.dart';

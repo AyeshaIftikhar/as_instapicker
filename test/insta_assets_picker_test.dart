@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insta_assets_picker/insta_assets_picker.dart';
-import 'package:insta_assets_picker/src/insta_assets_crop_controller.dart';
+import 'package:as_instapicker/as_instapicker.dart';
+import 'package:as_instapicker/src/instacrop_controller.dart';
 
 void main() {
   test('Ensure nextCropRatio() loop', () {
-    final InstaAssetsCropController controller =
-        InstaAssetsCropController(false, const InstaAssetCropDelegate());
+    final InstaCropController controller =
+        InstaCropController(false, const InstaCropDelegate());
 
     expect(controller.aspectRatio, 1);
     expect(controller.aspectRatioString, '1:1');

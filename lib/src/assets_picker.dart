@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:insta_assets_picker/insta_assets_picker.dart';
-import 'package:insta_assets_picker/src/widget/insta_asset_picker_delegate.dart';
+import 'package:as_instapicker/as_instapicker.dart';
+import 'package:as_instapicker/src/widget/insta_asset_picker_delegate.dart';
 
 const _kGridCount = 4;
 const _kInitializeDelayDuration = Duration(milliseconds: 250);
 const kDefaultInstaCropRatios = [1.0, 4 / 5];
 
-class InstaAssetCropDelegate {
-  const InstaAssetCropDelegate({
+class InstaCropDelegate {
+  const InstaCropDelegate({
     this.preferredSize = 1080,
     this.cropRatios = kDefaultInstaCropRatios,
   });
@@ -52,7 +52,7 @@ class InstaAssetPickerConfig {
     /// [InstaAssetPickerBuilder] config
 
     this.title,
-    this.cropDelegate = const InstaAssetCropDelegate(),
+    this.cropDelegate = const InstaCropDelegate(),
     this.closeOnComplete = false,
     this.skipCropOnComplete = false,
     this.actionsBuilder,
@@ -108,7 +108,7 @@ class InstaAssetPickerConfig {
   final String? title;
 
   /// Customize the display and export options of crops
-  final InstaAssetCropDelegate cropDelegate;
+  final InstaCropDelegate cropDelegate;
 
   /// Specifies if the picker should be closed after assets selection confirmation.
   ///
@@ -230,7 +230,7 @@ class InstaAssetPicker {
   /// This argument is required.
   ///
   /// - The [onCompleted] callback is called when the assets selection is confirmed.
-  /// It will as argument a [Stream] with exportation details [InstaAssetsExportDetails].
+  /// It will as argument a [Stream] with exportation details [InstaExportDetails].
   ///
   /// - Set [pickerConfig] to specifies more optional parameters for the picker.
   Future<List<AssetEntity>?> restorableAssetsPicker(
@@ -243,8 +243,7 @@ class InstaAssetPicker {
 
     /// InstaAssetPickerBuilder parameters
     required DefaultAssetPickerProvider Function() provider,
-    required Function(Stream<InstaAssetsExportDetails> exportDetails)
-        onCompleted,
+    required Function(Stream<InstaExportDetails> exportDetails) onCompleted,
     InstaAssetPickerConfig pickerConfig = const InstaAssetPickerConfig(),
   }) async {
     PermissionState? ps;
@@ -294,7 +293,7 @@ class InstaAssetPicker {
   /// Those arguments are used by [InstaAssetPickerBuilder]
   ///
   /// - The [onCompleted] callback is called when the assets selection is confirmed.
-  /// It will as argument a [Stream] with exportation details [InstaAssetsExportDetails].
+  /// It will as argument a [Stream] with exportation details [InstaExportDetails].
   ///
   /// - Set [pickerConfig] to specifies more optional parameters for the picker.
   ///
@@ -336,8 +335,7 @@ class InstaAssetPicker {
         onPermissionDenied,
 
     /// InstaAssetPickerBuilder parameters
-    required Function(Stream<InstaAssetsExportDetails> exportDetails)
-        onCompleted,
+    required Function(Stream<InstaExportDetails> exportDetails) onCompleted,
     InstaAssetPickerConfig pickerConfig = const InstaAssetPickerConfig(),
 
     /// DefaultAssetPickerProvider parameters

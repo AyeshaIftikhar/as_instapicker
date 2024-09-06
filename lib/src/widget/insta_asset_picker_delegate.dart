@@ -4,9 +4,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:insta_assets_picker/insta_assets_picker.dart';
-import 'package:insta_assets_picker/src/insta_assets_crop_controller.dart';
-import 'package:insta_assets_picker/src/widget/crop_viewer.dart';
+import 'package:as_instapicker/as_instapicker.dart';
+import 'package:as_instapicker/src/instacrop_controller.dart';
+import 'package:as_instapicker/src/widget/crop_viewer.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wechat_picker_library/wechat_picker_library.dart';
@@ -40,7 +40,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     super.keepScrollOffset,
     super.locale,
   })  : _cropController =
-            InstaAssetsCropController(keepScrollOffset, config.cropDelegate),
+            InstaCropController(keepScrollOffset, config.cropDelegate),
         title = config.title,
         closeOnComplete = config.closeOnComplete,
         skipCropOnComplete = config.skipCropOnComplete,
@@ -67,7 +67,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
 
   /// Callback called when the assets selection is confirmed.
   /// It will as argument a [Stream] with exportation details [InstaAssetsExportDetails].
-  final Function(Stream<InstaAssetsExportDetails>) onCompleted;
+  final Function(Stream<InstaExportDetails>) onCompleted;
 
   /// The [Widget] to display on top of the assets grid view.
   /// Default is unselect all assets button.
@@ -96,7 +96,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   final _cropViewerKey = GlobalKey<CropViewerState>();
 
   /// Controller handling the state of asset crop values and the exportation
-  final InstaAssetsCropController _cropController;
+  final InstaCropController _cropController;
 
   /// Whether the picker is mounted. Set to `false` if disposed.
   bool _mounted = true;

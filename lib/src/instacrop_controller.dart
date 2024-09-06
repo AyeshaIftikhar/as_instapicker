@@ -2,20 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fraction/fraction.dart';
-import 'package:insta_assets_crop/insta_assets_crop.dart';
-import 'package:insta_assets_picker/insta_assets_picker.dart';
+import 'package:instacrop/instacrop.dart';
+import 'package:as_instapicker/as_instapicker.dart';
 
-/// Uses [InstaAssetsCropSingleton] to keep crop parameters in memory until the picker is disposed
+/// Uses [InstaCropSingleton] to keep crop parameters in memory until the picker is disposed
 /// Similar to [Singleton] class from `wechat_assets_picker` package
 /// used only when [keepScrollOffset] is set to `true`
-class InstaAssetsCropSingleton {
-  const InstaAssetsCropSingleton._();
+class InstaCropSingleton {
+  const InstaCropSingleton._();
 
-  static List<InstaAssetsCropData> cropParameters = [];
+  static List<InstaCropData> cropParameters = [];
 }
 
-class InstaAssetsExportData {
-  const InstaAssetsExportData({
+class InstaExportData {
+  const InstaExportData({
     required this.croppedFile,
     required this.selectedData,
   });
@@ -25,14 +25,14 @@ class InstaAssetsExportData {
   final File? croppedFile;
 
   /// The selected data, contains the asset and it's crop values
-  final InstaAssetsCropData selectedData;
+  final InstaCropData selectedData;
 }
 
 /// Contains all the parameters of the exportation
-class InstaAssetsExportDetails {
+class InstaExportDetails {
   /// The export result, containing the selected assets, crop parameters
   /// and possible crop file.
-  final List<InstaAssetsExportData> data;
+  final List<InstaExportData> data;
 
   /// The selected thumbnails, can be provided to the picker to preselect those assets
   final List<AssetEntity> selectedAssets;
@@ -43,7 +43,7 @@ class InstaAssetsExportDetails {
   /// The [progress] param represents progress indicator between `0.0` and `1.0`.
   final double progress;
 
-  const InstaAssetsExportDetails({
+  const InstaExportDetails({
     required this.data,
     required this.selectedAssets,
     required this.aspectRatio,
@@ -52,7 +52,7 @@ class InstaAssetsExportDetails {
 }
 
 /// The crop parameters state, can be used at exportation or to load the crop view
-class InstaAssetsCropData {
+class InstaCropData {
   final AssetEntity asset;
   final CropInternal? cropParam;
 
@@ -81,18 +81,18 @@ class InstaAssetsCropData {
     return 'iw*$scale:ih*$scale';
   }
 
-  const InstaAssetsCropData({
+  const InstaCropData({
     required this.asset,
     required this.cropParam,
     this.scale = 1.0,
     this.area,
   });
 
-  static InstaAssetsCropData fromState({
+  static InstaCropData fromState({
     required AssetEntity asset,
     required CropState? cropState,
   }) {
-    return InstaAssetsCropData(
+    return InstaCropData(
       asset: asset,
       cropParam: cropState?.internalParameters,
       scale: cropState?.scale ?? 1.0,
@@ -102,8 +102,8 @@ class InstaAssetsCropData {
 }
 
 /// The controller that handles the exportation and save the state of the selected assets crop parameters
-class InstaAssetsCropController {
-  InstaAssetsCropController(this.keepMemory, this.cropDelegate)
+class InstaCropController {
+  InstaCropController(this.keepMemory, this.cropDelegate)
       : cropRatioIndex = ValueNotifier<int>(0);
 
   /// The index of the selected aspectRatio among the possibilities
@@ -117,10 +117,10 @@ class InstaAssetsCropController {
       ValueNotifier<AssetEntity?>(null);
 
   /// Options related to crop
-  final InstaAssetCropDelegate cropDelegate;
+  final InstaCropDelegate cropDelegate;
 
   /// List of all the crop parameters set by the user
-  List<InstaAssetsCropData> _cropParameters = [];
+  List<InstaCropData> _cropParameters = [];
 
   /// Whether if [_cropParameters] should be saved in the cache to use when the picker
   /// is open with [InstaAssetPicker.restorableAssetsPicker]
@@ -154,15 +154,15 @@ class InstaAssetsCropController {
     }
   }
 
-  /// Use [_cropParameters] when [keepMemory] is `false`, otherwise use [InstaAssetsCropSingleton.cropParameters]
-  List<InstaAssetsCropData> get cropParameters =>
-      keepMemory ? InstaAssetsCropSingleton.cropParameters : _cropParameters;
+  /// Use [_cropParameters] when [keepMemory] is `false`, otherwise use [InstaCropSingleton.cropParameters]
+  List<InstaCropData> get cropParameters =>
+      keepMemory ? InstaCropSingleton.cropParameters : _cropParameters;
 
   /// Save the list of crop parameters
   /// if [keepMemory] save list memory or simply in the controller
-  void updateStoreCropParam(List<InstaAssetsCropData> list) {
+  void updateStoreCropParam(List<InstaCropData> list) {
     if (keepMemory) {
-      InstaAssetsCropSingleton.cropParameters = list;
+      InstaCropSingleton.cropParameters = list;
     } else {
       _cropParameters = list;
     }
@@ -180,7 +180,7 @@ class InstaAssetsCropController {
     CropState? saveCropState,
     List<AssetEntity> selectedAssets,
   ) {
-    final List<InstaAssetsCropData> newList = [];
+    final List<InstaCropData> newList = [];
 
     for (final asset in selectedAssets) {
       // get the already saved crop parameters if exists
@@ -189,15 +189,14 @@ class InstaAssetsCropController {
       // if it is the asseet to save & the crop parameters exists
       if (asset == saveAsset && saveAsset != null) {
         // add the new parameters
-        newList.add(InstaAssetsCropData.fromState(
+        newList.add(InstaCropData.fromState(
           asset: saveAsset,
           cropState: saveCropState,
         ));
         // if it is not the asset to save and no crop parameter exists
       } else if (savedCropAsset == null) {
         // set empty crop parameters
-        newList
-            .add(InstaAssetsCropData.fromState(asset: asset, cropState: null));
+        newList.add(InstaCropData.fromState(asset: asset, cropState: null));
       } else {
         // keep existing crop parameters
         newList.add(savedCropAsset);
@@ -208,8 +207,8 @@ class InstaAssetsCropController {
     updateStoreCropParam(newList);
   }
 
-  /// Returns the crop parametes [InstaAssetsCropData] of the given asset
-  InstaAssetsCropData? get(AssetEntity asset) {
+  /// Returns the crop parametes [InstaCropData] of the given asset
+  InstaCropData? get(AssetEntity asset) {
     if (cropParameters.isEmpty) return null;
     final index = cropParameters.indexWhere((e) => e.asset == asset);
     if (index == -1) return null;
@@ -218,14 +217,14 @@ class InstaAssetsCropController {
 
   /// Apply all the crop parameters to the list of [selectedAssets]
   /// and returns the exportation as a [Stream]
-  Stream<InstaAssetsExportDetails> exportCropFiles(
+  Stream<InstaExportDetails> exportCropFiles(
     List<AssetEntity> selectedAssets, {
     bool skipCrop = false,
   }) async* {
-    final List<InstaAssetsExportData> data = [];
+    final List<InstaExportData> data = [];
 
     /// Returns the [InstaAssetsExportDetails] with given progress value [p]
-    InstaAssetsExportDetails makeDetail(double p) => InstaAssetsExportDetails(
+    InstaExportDetails makeDetail(double p) => InstaExportDetails(
           data: data,
           selectedAssets: selectedAssets,
           aspectRatio: aspectRatio,
@@ -234,7 +233,7 @@ class InstaAssetsCropController {
 
     // start progress
     yield makeDetail(0);
-    final List<InstaAssetsCropData> list = cropParameters;
+    final List<InstaCropData> list = cropParameters;
 
     final step = 1 / list.length;
 
@@ -242,8 +241,7 @@ class InstaAssetsCropController {
       final asset = list[i].asset;
 
       if (skipCrop || asset.type != AssetType.image) {
-        data.add(
-            InstaAssetsExportData(croppedFile: null, selectedData: list[i]));
+        data.add(InstaExportData(croppedFile: null, selectedData: list[i]));
       } else {
         final file = await asset.originFile;
 
@@ -255,23 +253,23 @@ class InstaAssetsCropController {
         }
 
         // makes the sample file to not be too small
-        final sampledFile = await InstaAssetsCrop.sampleImage(
+        final sampledFile = await InstaCrop.sampleImage(
           file: file,
           preferredSize: (cropDelegate.preferredSize / scale).round(),
         );
 
         if (area == null) {
-          data.add(InstaAssetsExportData(
-              croppedFile: sampledFile, selectedData: list[i]));
+          data.add(
+              InstaExportData(croppedFile: sampledFile, selectedData: list[i]));
         } else {
           // crop the file with the area selected
           final croppedFile =
-              await InstaAssetsCrop.cropImage(file: sampledFile, area: area);
+              await InstaCrop.cropImage(file: sampledFile, area: area);
           // delete the not needed sample file
           sampledFile.delete();
 
-          data.add(InstaAssetsExportData(
-              croppedFile: croppedFile, selectedData: list[i]));
+          data.add(
+              InstaExportData(croppedFile: croppedFile, selectedData: list[i]));
         }
       }
 
