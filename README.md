@@ -1,10 +1,10 @@
 <p align="center">
-  <h1 align="center">Instagram Assets Picker</h1>
+  <h1 align="center">Instagram Like Assets Picker</h1>
 </p>
 
 
 An image (also with videos) picker based on Instagram picker UI. It is using the powerful [flutter_wechat_assets_picker](https://pub.dev/packages/wechat_assets_picker)
-package to handle the picker and a custom version of [image_crop](https://pub.dev/packages/image_crop) for crop.
+package to handle the picker and a custom version of [image_crop](https://pub.dev/packages/image_crop) for crop and a fork of [insta_assets_picker](https://pub.dev/packages/insta_assets_picker).
 
 ## 🚀 Features
 
