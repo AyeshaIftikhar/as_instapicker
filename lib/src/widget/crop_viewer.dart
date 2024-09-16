@@ -218,6 +218,7 @@ class _InnerCropViewState extends State<InnerCropView>
     return Stack(
       children: [
         LocallyAvailableBuilder(
+          isOriginal: true,
           key: ValueKey<String>(widget.asset.id),
           asset: widget.asset,
           builder: (BuildContext context, AssetEntity asset) =>

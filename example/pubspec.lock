@@ -7,7 +7,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.2"
+    version: "0.0.3"
   async:
     dependency: transitive
     description:
@@ -124,10 +124,10 @@ packages:
     dependency: transitive
     description:
       name: extended_image
-      sha256: "9786aab821aac117763d6e4419cd49f5031fbaacfe3fd212c5b313d0334c37a9"
+      sha256: c7b628bdbeb398bdd824cfc9d521f18e04b63ad2af811d182e885d3ae4ef45de
       url: "https://pub.dev"
     source: hosted
-    version: "8.2.1"
+    version: "8.2.3"
   extended_image_library:
     dependency: transitive
     description:
@@ -248,10 +248,10 @@ packages:
     dependency: transitive
     description:
       name: instacrop
-      sha256: "72fbb21ca4f8a81f8b4d4f916d57db91ca8c065ffb6a2916520bcddfdd50cec7"
+      sha256: "27d2a163d04baabbf7e10c5f01912a3351c87693e8ade123ab7b282a03b001a8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   intl:
     dependency: transitive
     description:
@@ -597,10 +597,10 @@ packages:
     dependency: transitive
     description:
       name: wechat_assets_picker
-      sha256: "04b695235aba08aafc1eda255d65582d555c1515fd46d1766a6df063aa5c047a"
+      sha256: aea82a6b523e118197187c6371301de5d15ce5572f353b575b5dcdeb2d17d44a
       url: "https://pub.dev"
     source: hosted
-    version: "9.2.1"
+    version: "9.2.2"
   wechat_camera_picker:
     dependency: "direct main"
     description:
@@ -613,10 +613,10 @@ packages:
     dependency: transitive
     description:
       name: wechat_picker_library
-      sha256: "886cdf80a708fa955c2d7e6a2349c9b4519b322cd941e8c7334512c25294b1b1"
+      sha256: "0c2c4befeb472fc64f65903a96767a25cd8c312f0d34022873a0bccc593980a7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   xdg_directories:
     dependency: transitive
     description:

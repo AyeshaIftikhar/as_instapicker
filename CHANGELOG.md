@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.3
+* fixed `isOriginal` issue.
+
 ## 0.0.2
 
 * bugs fixes and improvements
