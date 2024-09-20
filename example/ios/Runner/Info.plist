@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>App requires access to camera for sending media and video calls</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App requires access to photos for sending media</string>
 </dict>
 </plist>

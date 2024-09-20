@@ -48,6 +48,7 @@ class InstaAssetPickerConfig {
     this.textDelegate,
     this.gridThumbnailSize = defaultAssetGridPreviewSize,
     this.previewThumbnailSize,
+    this.pathNameBuilder,
 
     /// [InstaAssetPickerBuilder] config
 
@@ -101,6 +102,9 @@ class InstaAssetPickerConfig {
 
   /// Preview thumbnail size in the crop viewer.
   final ThumbnailSize? previewThumbnailSize;
+
+  /// {@macro wechat_assets_picker.PathNameBuilder}
+  final PathNameBuilder<AssetPathEntity>? pathNameBuilder;
 
   /* [InstaAssetPickerBuilder] config */
 
@@ -230,7 +234,7 @@ class InstaAssetPicker {
   /// This argument is required.
   ///
   /// - The [onCompleted] callback is called when the assets selection is confirmed.
-  /// It will as argument a [Stream] with exportation details [InstaExportDetails].
+  /// It will as argument a [Stream] with exportation details [InstaAssetsExportDetails].
   ///
   /// - Set [pickerConfig] to specifies more optional parameters for the picker.
   Future<List<AssetEntity>?> restorableAssetsPicker(
@@ -293,7 +297,7 @@ class InstaAssetPicker {
   /// Those arguments are used by [InstaAssetPickerBuilder]
   ///
   /// - The [onCompleted] callback is called when the assets selection is confirmed.
-  /// It will as argument a [Stream] with exportation details [InstaExportDetails].
+  /// It will as argument a [Stream] with exportation details [InstaAssetsExportDetails].
   ///
   /// - Set [pickerConfig] to specifies more optional parameters for the picker.
   ///
@@ -389,6 +393,12 @@ class InstaAssetPicker {
     return AssetPicker.pickAssetsWithDelegate(
       context,
       delegate: builder,
+      permissionRequestOption: PermissionRequestOption(
+        androidPermission: AndroidPermission(
+          type: requestType,
+          mediaLocation: false,
+        ),
+      ),
       useRootNavigator: useRootNavigator,
       pageRouteBuilder: pageRouteBuilder,
     );

@@ -1,0 +1,77 @@
+PODS:
+  - camera_avfoundation (0.0.1):
+    - Flutter
+  - ffmpeg-kit-ios-min (6.0)
+  - ffmpeg_kit_flutter_min (6.0.3):
+    - ffmpeg_kit_flutter_min/min (= 6.0.3)
+    - Flutter
+  - ffmpeg_kit_flutter_min/min (6.0.3):
+    - ffmpeg-kit-ios-min (= 6.0)
+    - Flutter
+  - Flutter (1.0.0)
+  - instacrop (0.0.1):
+    - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - photo_manager (2.0.0):
+    - Flutter
+    - FlutterMacOS
+  - sensors_plus (0.0.1):
+    - Flutter
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
+  - ffmpeg_kit_flutter_min (from `.symlinks/plugins/ffmpeg_kit_flutter_min/ios`)
+  - Flutter (from `Flutter`)
+  - instacrop (from `.symlinks/plugins/instacrop/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
+  - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - ffmpeg-kit-ios-min
+
+EXTERNAL SOURCES:
+  camera_avfoundation:
+    :path: ".symlinks/plugins/camera_avfoundation/ios"
+  ffmpeg_kit_flutter_min:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter_min/ios"
+  Flutter:
+    :path: Flutter
+  instacrop:
+    :path: ".symlinks/plugins/instacrop/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  photo_manager:
+    :path: ".symlinks/plugins/photo_manager/ios"
+  sensors_plus:
+    :path: ".symlinks/plugins/sensors_plus/ios"
+  video_player_avfoundation:
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
+
+SPEC CHECKSUMS:
+  camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
+  ffmpeg-kit-ios-min: 4e9a088f4ee9629435960b9d68e54848975f1931
+  ffmpeg_kit_flutter_min: 5eff47f4965bf9d1150e98961eb6129f5ae3f28c
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  instacrop: b4b1e5663baf2910c37a570128f43ed1870a0d14
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
+  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
+  sensors_plus: 18a9b346c43e157da17d2c8e99def703f9efb9d8
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
+
+PODFILE CHECKSUM: 882d9ce5317f55961d4986c6fa0e89bdf2857673
+
+COCOAPODS: 1.15.2

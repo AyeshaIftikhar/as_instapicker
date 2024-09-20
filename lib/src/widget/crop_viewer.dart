@@ -45,7 +45,7 @@ class CropViewerState extends State<CropViewer> {
     super.deactivate();
   }
 
-  /// Save the crop parameters state in [InstaCropController]
+  /// Save the crop parameters state in [InstaAssetsCropController]
   /// to retrieve it if the asset is opened again
   /// and apply them at the exportation
   void saveCurrentCropChanges() {
@@ -218,9 +218,9 @@ class _InnerCropViewState extends State<InnerCropView>
     return Stack(
       children: [
         LocallyAvailableBuilder(
-          isOriginal: true,
           key: ValueKey<String>(widget.asset.id),
           asset: widget.asset,
+          isOriginal: true,
           builder: (BuildContext context, AssetEntity asset) =>
               insta_crop_view.Crop(
             key: widget.cropKey,
