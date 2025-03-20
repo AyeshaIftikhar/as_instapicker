@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1+1
+* fixed documentation
+
 ## 1.0.1
 * Customizable background color for selected asset indicator `indicatorColor` 
 * Add Custom TextStyle for indicator text `indicatorTextStyle`

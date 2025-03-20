@@ -2,15 +2,14 @@
   <h1 align="center">Instagram Like Assets Picker</h1>
 </p>
 
-
 An image (also with videos) picker based on Instagram picker UI. It is using the powerful [flutter_wechat_assets_picker](https://pub.dev/packages/wechat_assets_picker)
 package to handle the picker and a custom version of [image_crop](https://pub.dev/packages/image_crop) for crop and a fork of [insta_assets_picker](https://pub.dev/packages/insta_assets_picker).
 
 ## 🚀 Features
 
 - ✅ Instagram layout
-    - Scroll behaviors, animation
-    - Preview, select, unselect action logic
+  - Scroll behaviors, animation
+  - Preview, select, unselect action logic
 - ✅ Image and Video ([but not video processing](#video)) support
 - ✅ Theme and language customization
 - ✅ Multiple assets pick (with maximum limit)
@@ -23,8 +22,8 @@ package to handle the picker and a custom version of [image_crop](https://pub.de
 
 ## 📸 Screenshots
 
-| Layout and scroll                   | Crop                                     |
-| ----------------------------------- | ---------------------------------------- |
+| Layout and scroll                                                                                          | Crop                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | ![](https://raw.githubusercontent.com/LeGoffMael/insta_assets_picker/main/example/screenshots/scroll.webp) | ![](https://raw.githubusercontent.com/LeGoffMael/insta_assets_picker/main/example/screenshots/crop-export.webp) |
 
 ## 📖 Installation
@@ -32,7 +31,7 @@ package to handle the picker and a custom version of [image_crop](https://pub.de
 Add this package to the `pubspec.yaml`
 
 ```yaml
-insta_assets_picker: ^3.0.0-dev.1
+as_instapicker: ^1.0.1
 ```
 
 ### ‼️ DO NOT SKIP THIS PART
@@ -41,13 +40,13 @@ Since this package is a custom delegate of `flutter_wechat_assets_picker` you **
 
 ## 👀 Usage
 
-For more details check out the [example](https://github.com/LeGoffMael/insta_assets_picker/blob/main/example/lib/main.dart).
+For more details check out the [example](https://github.com/AyeshaIftikhar/as_instapicker/blob/main/example/lib/main.dart).
 
 ```dart
 Future<List<AssetEntity>?> callPicker() => InstaAssetPicker.pickAssets(
     context,
     pickerConfig: InstaAssetPickerConfig(
-      title: 'Select assets',
+      title: 'Select assets'
     ),
     maxAssets: 10,
     onCompleted: (Stream<InstaAssetsExportDetails> stream) {
@@ -63,12 +62,12 @@ Future<List<AssetEntity>?> callPicker() => InstaAssetPicker.pickAssets(
 
 Fields in `InstaAssetsExportDetails`:
 
-| Name           | Type                          | Description                                             |
+| Name           | Type                          | Description                                                           |
 | -------------- | ----------------------------- | --------------------------------------------------------------------- |
 | data           | `List<InstaAssetsExportData>` | Contains the selected assets, crop parameters and possible crop file. |
-| selectedAssets | `List<AssetEntity>`           | Selected assets without crop                            |
-| aspectRatio    | `double`                      | Selected aspect ratio (1 or 4/5)                        |
-| progress       | `double`                      | Progress indicator of the exportation (between 0 and 1) |
+| selectedAssets | `List<AssetEntity>`           | Selected assets without crop                                          |
+| aspectRatio    | `double`                      | Selected aspect ratio (1 or 4/5)                                      |
+| progress       | `double`                      | Progress indicator of the exportation (between 0 and 1)               |
 
 Fields in `InstaAssetsExportData`:
 
@@ -152,11 +151,11 @@ InstaAssetPicker.pickAssets(
 
 Many people requested the ability to take picture from the picker.
 The main aspect of this package is selection and uniform crop selection.
-Consequently, camera-related operations have no place in this package. 
+Consequently, camera-related operations have no place in this package.
 However, since version `2.0.0`, it is now possible to trigger this action using either `specialItemBuilder` and/or `actionsBuilder`.
 
 The ability to take a photo from the camera must be handled on your side, but the picker is now able to refresh the list and select the new photo.
-New [examples](https://github.com/LeGoffMael/insta_assets_picker/tree/main/example/lib/pages/camera) have been written to show how to manage this process with the [camera](https://pub.dev/packages/camera) or [wechat_camera_picker](https://pub.dev/packages/wechat_camera_picker) package.
+New [examples](https://github.com/AyeshaIftikhar/as_instapicker/tree/main/example/lib/pages/camera) have been written to show how to manage this process with the [camera](https://pub.dev/packages/camera) or [wechat_camera_picker](https://pub.dev/packages/wechat_camera_picker) package.
 
 ### Video
 
@@ -164,8 +163,8 @@ Video are now supported on version `3.0.0`. You can pick a video asset and selec
 However, as video processing is a heavy operation it is not handled by this package.
 Which means you must handle it yourself. If you want to preview the video result, you can use the `InstaAssetCropTransform` which will transform the Image or VideoPlayer to fit the selected crop area.
 
-The example app has been updated to support videos (+ camera recording) and shows [how to process the video](https://github.com/LeGoffMael/insta_assets_picker/tree/main/example/lib/post_provider.dart#L84) using [ffmpeg_kit_flutter](https://pub.dev/packages/ffmpeg_kit_flutter).
+The example app has been updated to support videos (+ camera recording) and shows [how to process the video](https://github.com/AyeshaIftikhar/as_instapicker/tree/main/example/lib/post_provider.dart#L84) using [ffmpeg_kit_flutter](https://pub.dev/packages/ffmpeg_kit_flutter).
 
 ## ✨ Credit
 
-This package is based on [flutter_wechat_assets_picker](https://pub.dev/packages/wechat_assets_picker) by [AlexV525](https://github.com/AlexV525) and [image_crop](https://pub.dev/packages/image_crop) by [lykhonis](https://github.com/lykhonis).
+This package is based on [flutter_wechat_assets_picker](https://pub.dev/packages/wechat_assets_picker) and a fork of [insta_assets_picker](https://pub.dev/packages/insta_assets_picker) by [Ayesha Iftikhar](https://github.com/AyeshaIftikhar/as_instapicker) and [image_crop](https://pub.dev/packages/image_crop) by [lykhonis](https://github.com/lykhonis).
