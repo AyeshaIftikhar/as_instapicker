@@ -241,10 +241,13 @@ class InstaAssetPicker {
     BuildContext context, {
     Key? key,
     Color? indicatorColor,
+    Color? actionTextColor,
     TextStyle? indicatorTextStyle,
     Widget? confirmIcon,
     bool showSelectedCount = false,
     bool useRootNavigator = true,
+    String? fontFamily,
+    ValueChanged<List<AssetEntity>>? onAssetsUpdated,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
     Function(BuildContext context, String delegateDescription)?
         onPermissionDenied,
@@ -271,6 +274,9 @@ class InstaAssetPicker {
     _assertRequestType(restoredProvider.requestType);
 
     builder ??= InstaAssetPickerBuilder(
+      onAssetsUpdated: onAssetsUpdated,
+      fontFamily: fontFamily,
+      actionTextColor: actionTextColor,
       showSelectedCount: showSelectedCount,
       indicatorTextStyle: indicatorTextStyle,
       indicatorColor: indicatorColor,
@@ -341,11 +347,14 @@ class InstaAssetPicker {
   static Future<List<AssetEntity>?> pickAssets(
     BuildContext context, {
     Key? key,
+    String? fontFamily,
+    Color? actionTextColor,
     TextStyle? indicatorTextStyle,
     Color? indicatorColor,
     Widget? confirmIcon,
     bool showSelectedCount = false,
     bool useRootNavigator = true,
+    ValueChanged<List<AssetEntity>>? onAssetsUpdated,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
     Function(BuildContext context, String delegateDescription)?
         onPermissionDenied,
@@ -394,6 +403,9 @@ class InstaAssetPicker {
     );
 
     final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
+      onAssetsUpdated: onAssetsUpdated,
+      fontFamily: fontFamily,
+      actionTextColor: actionTextColor,
       showSelectedCount: showSelectedCount,
       indicatorTextStyle: indicatorTextStyle,
       indicatorColor: indicatorColor,

@@ -36,13 +36,16 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     this.confirmIcon,
     this.indicatorColor,
     this.indicatorTextStyle,
+    this.actionTextColor,
     required super.initialPermission,
     required super.provider,
     required this.onCompleted,
     required InstaAssetPickerConfig config,
     this.showSelectedCount = false,
+    this.fontFamily,
     super.keepScrollOffset,
     super.locale,
+    this.onAssetsUpdated,
   })  : _cropController =
             InstaCropController(keepScrollOffset, config.cropDelegate),
         title = config.title,
@@ -66,6 +69,15 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           // pathNameBuilder: config.pathNameBuilder,
           shouldRevertGrid: false,
         );
+
+  /// Callback triggered when assets are selected or deselected
+  final ValueChanged<List<AssetEntity>>? onAssetsUpdated;
+
+  /// Customized FontFamily
+  final String? fontFamily;
+
+  /// The color of the selected assets action color
+  final Color? actionTextColor;
 
   /// This will show the selected assets count in the picker[Actions]
   final bool showSelectedCount;
@@ -246,6 +258,10 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
       _cropController.previewAsset.value = selectedAssets.last;
     }
 
+    if (onAssetsUpdated != null) {
+      onAssetsUpdated!(provider.selectedAssets);
+    }
+
     _expandCropView(thumbnailPosition);
   }
 
@@ -340,6 +356,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                     style: theme.textTheme.bodyLarge?.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: actionTextColor,
+                      fontFamily: fontFamily,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -357,7 +375,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
             child: Icon(
               Icons.keyboard_arrow_down,
               size: 20,
-              color: theme.iconTheme.color,
+              color: actionTextColor ?? theme.iconTheme.color,
             ),
           ),
         ),
@@ -395,10 +413,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                     provider.maxAssets > 1)
                   Chip(
                     label: Text(
-                      '$selectedItemCount/${provider.maxAssets}',
-                      style: theme?.textTheme.bodyMedium?.copyWith(
-                        color: theme.iconTheme.color,
-                      ),
+                      '$selectedItemCount/${provider.maxAssets} Selected',
                     ),
                   ),
                 actionsBuilder != null
@@ -437,6 +452,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                 TextButton.styleFrom(
                   foregroundColor: themeColor,
                   disabledForegroundColor: theme.dividerColor,
+                  textStyle: TextStyle(fontFamily: fontFamily),
                 ),
             onPressed: isLoaded && p.isSelectedNotEmpty
                 ? () => onConfirm(context)
@@ -539,7 +555,9 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                       title: title != null
                           ? Text(
                               title!,
-                              style: theme.appBarTheme.titleTextStyle,
+                              style: theme.appBarTheme.titleTextStyle!.copyWith(
+                                fontFamily: fontFamily,
+                              ),
                             )
                           : null,
                       leading: backButton(context),
@@ -680,7 +698,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           duration: duration,
           reverseDuration: duration,
           child: isSelected
-              ? Text((indexSelected + 1).toString(), style: indicatorTextStyle)
+              ? Text(
+                  (indexSelected + 1).toString(),
+                  style: indicatorTextStyle ??
+                      TextStyle(
+                        fontFamily: fontFamily,
+                      ),
+                )
               : const SizedBox.shrink(),
         ),
       ),

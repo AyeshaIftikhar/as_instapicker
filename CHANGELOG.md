@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1+2
+* Added font family for the picker `fontFamily`
+* Set action bar text color `actionTextColor`
+* `onAssetsUpdated` to handle custom logics when an asset is selected or unselected
+
 ## 1.0.1+1
 * fixed documentation
 
