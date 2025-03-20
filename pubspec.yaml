@@ -1,8 +1,8 @@
 name: as_instapicker
 description: An image (and videos) picker similar with Instagram, supports multi picking, crop and aspect ratio. fork of insta_assets_picker
-version: 1.0.0
-repository: https://github.com/AyeshaIftikhar/instapicker
-homepage: https://github.com/AyeshaIftikhar/instapicker.git
+version: 1.0.1
+repository: https://github.com/AyeshaIftikhar/as_instapicker
+homepage: https://github.com/AyeshaIftikhar/as_instapicker.git
 topics:
   - picker
   - crop
@@ -35,3 +35,15 @@ dev_dependencies:
 
 funding: 
   - https://patreon.com/AyeshaIftikhar
+
+screenshots:
+  - description: 'Home Screen'
+    path: screenshots/flutter_01.png
+  - description: 'Single Mode Picker'
+    path: screenshots/flutter_02.png
+  - description: 'Picker Result'
+    path: screenshots/flutter_03.png
+  - description: 'My Post Screen'
+    path: screenshots/flutter_04.png
+  - description: 'Multi Mode Picker'
+    path: screenshots/flutter_05.png

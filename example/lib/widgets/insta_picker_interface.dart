@@ -25,6 +25,9 @@ mixin InstaPickerInterface on Widget {
   ThemeData getPickerTheme(BuildContext context) {
     return InstaAssetPicker.themeData(Colors.amber).copyWith(
       appBarTheme: const AppBarTheme(titleTextStyle: TextStyle(fontSize: 16)),
+      chipTheme: ChipThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
     );
   }
 
@@ -86,14 +89,22 @@ mixin InstaPickerInterface on Widget {
   void pickAssets(BuildContext context, {required int maxAssets}) =>
       InstaAssetPicker.pickAssets(
         context,
+        showSelectedCount: true,
+        maxAssets: maxAssets,
+        indicatorColor: Colors.red,
+        confirmIcon: const Icon(Icons.check, color: Colors.red),
+        indicatorTextStyle: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
         pickerConfig: InstaAssetPickerConfig(
           title: description.fullLabel,
           closeOnComplete: true,
           pickerTheme: getPickerTheme(context),
+          actionsBuilder: (context, pickerTheme, height, unselectAll) => [],
           // skipCropOnComplete: true, // to test ffmpeg crop image
           // previewThumbnailSize: const ThumbnailSize(240, 240), // to improve thumbnails speed in crop view
         ),
-        maxAssets: maxAssets,
         onCompleted: (Stream<InstaExportDetails> cropStream) {
           Navigator.push(
             context,

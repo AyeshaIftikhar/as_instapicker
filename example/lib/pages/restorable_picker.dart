@@ -40,12 +40,16 @@ class _PickerScreenState extends State<RestorablePicker> {
     final List<AssetEntity>? result =
         await _instaAssetsPicker.restorableAssetsPicker(
       context,
+      showSelectedCount: false,
+      indicatorTextStyle:
+          const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      indicatorColor: Colors.red,
+      provider: () => _provider,
       pickerConfig: InstaAssetPickerConfig(
         title: widget.description.fullLabel,
         closeOnComplete: true,
         pickerTheme: _pickerTheme,
       ),
-      provider: () => _provider,
       onCompleted: (cropStream) {
         // example without StreamBuilder
         cropStream.listen((event) {
@@ -60,9 +64,7 @@ class _PickerScreenState extends State<RestorablePicker> {
 
     if (result != null) {
       selectedAssets = result;
-      if (mounted) {
-        setState(() {});
-      }
+      if (mounted) setState(() {});
     }
   }
 

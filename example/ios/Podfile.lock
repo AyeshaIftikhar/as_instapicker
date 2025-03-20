@@ -61,17 +61,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
-  camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
-  ffmpeg-kit-ios-min: 4e9a088f4ee9629435960b9d68e54848975f1931
-  ffmpeg_kit_flutter_min: 5eff47f4965bf9d1150e98961eb6129f5ae3f28c
+  camera_avfoundation: 04b44aeb14070126c6529e5ab82cc7c9fca107cf
+  ffmpeg-kit-ios-min: 29195b571253df57ab6c4bf002a4d648efa1166a
+  ffmpeg_kit_flutter_min: 82daaf8877c99bf42173212aa72c1e20a45f28d3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  instacrop: b4b1e5663baf2910c37a570128f43ed1870a0d14
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
-  sensors_plus: 18a9b346c43e157da17d2c8e99def703f9efb9d8
-  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
+  instacrop: 3abe885e9c72aa5bb83479ccf94bc7f8824c54c7
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413
+  sensors_plus: 3c3bac724a2128c895623e03efd82cf0e94fd8e8
+  video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
 
 PODFILE CHECKSUM: 882d9ce5317f55961d4986c6fa0e89bdf2857673
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

@@ -240,6 +240,10 @@ class InstaAssetPicker {
   Future<List<AssetEntity>?> restorableAssetsPicker(
     BuildContext context, {
     Key? key,
+    Color? indicatorColor,
+    TextStyle? indicatorTextStyle,
+    Widget? confirmIcon,
+    bool showSelectedCount = false,
     bool useRootNavigator = true,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
     Function(BuildContext context, String delegateDescription)?
@@ -267,6 +271,10 @@ class InstaAssetPicker {
     _assertRequestType(restoredProvider.requestType);
 
     builder ??= InstaAssetPickerBuilder(
+      showSelectedCount: showSelectedCount,
+      indicatorTextStyle: indicatorTextStyle,
+      indicatorColor: indicatorColor,
+      confirmIcon: confirmIcon,
       initialPermission: ps,
       provider: restoredProvider,
       keepScrollOffset: true,
@@ -333,6 +341,10 @@ class InstaAssetPicker {
   static Future<List<AssetEntity>?> pickAssets(
     BuildContext context, {
     Key? key,
+    TextStyle? indicatorTextStyle,
+    Color? indicatorColor,
+    Widget? confirmIcon,
+    bool showSelectedCount = false,
     bool useRootNavigator = true,
     AssetPickerPageRouteBuilder<List<AssetEntity>>? pageRouteBuilder,
     Function(BuildContext context, String delegateDescription)?
@@ -382,6 +394,10 @@ class InstaAssetPicker {
     );
 
     final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
+      showSelectedCount: showSelectedCount,
+      indicatorTextStyle: indicatorTextStyle,
+      indicatorColor: indicatorColor,
+      confirmIcon: confirmIcon,
       initialPermission: ps,
       provider: provider,
       keepScrollOffset: false,

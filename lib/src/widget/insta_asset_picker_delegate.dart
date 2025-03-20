@@ -33,10 +33,14 @@ typedef InstaPickerActionsBuilder = List<Widget> Function(
 
 class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   InstaAssetPickerBuilder({
+    this.confirmIcon,
+    this.indicatorColor,
+    this.indicatorTextStyle,
     required super.initialPermission,
     required super.provider,
     required this.onCompleted,
     required InstaAssetPickerConfig config,
+    this.showSelectedCount = false,
     super.keepScrollOffset,
     super.locale,
   })  : _cropController =
@@ -62,6 +66,18 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           // pathNameBuilder: config.pathNameBuilder,
           shouldRevertGrid: false,
         );
+
+  /// This will show the selected assets count in the picker[Actions]
+  final bool showSelectedCount;
+
+  /// Add a textStyle to the selected assets indicator
+  final TextStyle? indicatorTextStyle;
+
+  /// The color of the selected assets indicator
+  final Color? indicatorColor;
+
+  /// this will be the icon in [AppBar] actions instead of the default confirm text
+  final Widget? confirmIcon;
 
   /// The text title in the picker [AppBar].
   final String? title;
@@ -190,12 +206,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int? index,
     AssetEntity currentAsset,
   ) async {
-    if (index == null) {
-      return;
-    }
-    if (_cropController.isCropViewReady.value != true) {
-      return;
-    }
+    if (index == null) return;
+    if (_cropController.isCropViewReady.value != true) return;
     // if is preview asset, unselect it
     if (provider.selectedAssets.isNotEmpty &&
         _cropController.previewAsset.value == currentAsset) {
@@ -218,9 +230,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int index,
     bool selected,
   ) async {
-    if (_cropController.isCropViewReady.value != true) {
-      return;
-    }
+    if (_cropController.isCropViewReady.value != true) return;
 
     final thumbnailPosition = indexPosition(context, index);
     final prevCount = provider.selectedAssets.length;
@@ -361,7 +371,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   }
 
   /// Returns the list ofactions that are displayed on top of the assets grid view
-  Widget _buildActions(BuildContext context) {
+  Widget _buildActions(BuildContext context, int selectedItemCount) {
     final double height = _kPathSelectorRowHeight - _kActionsPadding.vertical;
     final ThemeData? theme = pickerTheme?.copyWith(
       buttonTheme: const ButtonThemeData(padding: EdgeInsets.all(8)),
@@ -377,21 +387,37 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             pathEntitySelector(context),
-            actionsBuilder != null
-                ? Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: actionsBuilder!(
-                      context,
-                      theme,
-                      height,
-                      unSelectAll,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (showSelectedCount &&
+                    selectedItemCount > 0 &&
+                    provider.maxAssets > 1)
+                  Chip(
+                    label: Text(
+                      '$selectedItemCount/${provider.maxAssets}',
+                      style: theme?.textTheme.bodyMedium?.copyWith(
+                        color: theme.iconTheme.color,
+                      ),
                     ),
-                  )
-                : InstaPickerCircleIconButton.unselectAll(
-                    onTap: unSelectAll,
-                    theme: theme,
-                    size: height,
                   ),
+                actionsBuilder != null
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: actionsBuilder!(
+                          context,
+                          theme,
+                          height,
+                          unSelectAll,
+                        ),
+                      )
+                    : InstaPickerCircleIconButton.unselectAll(
+                        onTap: unSelectAll,
+                        theme: theme,
+                        size: height,
+                      ),
+              ],
+            ),
           ],
         ),
       ),
@@ -416,12 +442,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                 ? () => onConfirm(context)
                 : null,
             child: isLoaded
-                ? Text(
-                    p.isSelectedNotEmpty && !isSingleAssetMode
-                        ? '${textDelegate.confirm}'
-                            ' (${p.selectedAssets.length}/${p.maxAssets})'
-                        : textDelegate.confirm,
-                  )
+                ? confirmIcon ??
+                    Text(
+                      p.isSelectedNotEmpty && !isSingleAssetMode
+                          ? '${textDelegate.confirm}'
+                              ' (${p.selectedAssets.length}/${p.maxAssets})'
+                          : textDelegate.confirm,
+                    )
                 : _buildLoader(context, 10),
           );
         },
@@ -445,127 +472,134 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     return ChangeNotifierProvider<DefaultAssetPickerProvider>.value(
       value: provider,
       builder: (context, _) => ValueListenableBuilder<double>(
-          valueListenable: _cropViewPosition,
-          builder: (context, position, child) {
-            // the top position when the crop view is reduced
-            final topReducedPosition = -(cropViewHeight(context) -
-                _kReducedCropViewHeight +
-                kToolbarHeight);
-            position =
-                position.clamp(topReducedPosition, _kExtendedCropViewPosition);
-            // the height of the crop view visible on screen
-            final cropViewVisibleHeight = (topWidgetHeight +
-                    position -
-                    MediaQuery.of(context).padding.top -
-                    kToolbarHeight -
-                    _kPathSelectorRowHeight)
-                .clamp(_kReducedCropViewHeight, topWidgetHeight);
-            // opacity is calculated based on the position of the crop view
-            final opacity =
-                ((position / -topReducedPosition) + 1).clamp(0.4, 1.0);
-            final animationDuration = position == topReducedPosition ||
-                    position == _kExtendedCropViewPosition
-                ? const Duration(milliseconds: 250)
-                : Duration.zero;
+        valueListenable: _cropViewPosition,
+        builder: (context, position, child) {
+          // the top position when the crop view is reduced
+          final topReducedPosition = -(cropViewHeight(context) -
+              _kReducedCropViewHeight +
+              kToolbarHeight);
+          position =
+              position.clamp(topReducedPosition, _kExtendedCropViewPosition);
+          // the height of the crop view visible on screen
+          final cropViewVisibleHeight = (topWidgetHeight +
+                  position -
+                  MediaQuery.of(context).padding.top -
+                  kToolbarHeight -
+                  _kPathSelectorRowHeight)
+              .clamp(_kReducedCropViewHeight, topWidgetHeight);
+          // opacity is calculated based on the position of the crop view
+          final opacity =
+              ((position / -topReducedPosition) + 1).clamp(0.4, 1.0);
+          final animationDuration = position == topReducedPosition ||
+                  position == _kExtendedCropViewPosition
+              ? const Duration(milliseconds: 250)
+              : Duration.zero;
 
-            double gridHeight = MediaQuery.of(context).size.height -
-                kToolbarHeight -
-                _kReducedCropViewHeight;
-            // when not assets are displayed, compute the exact height to show the loader
-            if (!provider.hasAssetsToDisplay) {
-              gridHeight -= cropViewHeight(context) - -_cropViewPosition.value;
-            }
-            final topPadding = topWidgetHeight + position;
-            if (gridScrollController.hasClients &&
-                _scrollTargetOffset != null) {
-              gridScrollController.jumpTo(_scrollTargetOffset!);
-            }
-            _scrollTargetOffset = null;
+          double gridHeight = MediaQuery.of(context).size.height -
+              kToolbarHeight -
+              _kReducedCropViewHeight;
+          // when not assets are displayed, compute the exact height to show the loader
+          if (!provider.hasAssetsToDisplay) {
+            gridHeight -= cropViewHeight(context) - -_cropViewPosition.value;
+          }
+          final topPadding = topWidgetHeight + position;
+          if (gridScrollController.hasClients && _scrollTargetOffset != null) {
+            gridScrollController.jumpTo(_scrollTargetOffset!);
+          }
+          _scrollTargetOffset = null;
 
-            return Stack(
-              children: [
-                AnimatedPadding(
-                  padding: EdgeInsets.only(top: topPadding),
-                  duration: animationDuration,
-                  child: SizedBox(
-                    height: gridHeight,
-                    width: MediaQuery.of(context).size.width,
-                    child: NotificationListener<ScrollNotification>(
-                      onNotification: (notification) => _handleScroll(
-                        context,
-                        notification,
-                        position,
-                        topReducedPosition,
-                      ),
-                      child: _buildGrid(context),
+          return Stack(
+            children: [
+              AnimatedPadding(
+                padding: EdgeInsets.only(top: topPadding),
+                duration: animationDuration,
+                child: SizedBox(
+                  height: gridHeight,
+                  width: MediaQuery.of(context).size.width,
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) => _handleScroll(
+                      context,
+                      notification,
+                      position,
+                      topReducedPosition,
                     ),
+                    child: _buildGrid(context),
                   ),
                 ),
-                AnimatedPositioned(
-                  top: position,
-                  duration: animationDuration,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: topWidgetHeight,
-                    child: AssetPickerAppBarWrapper(
-                      appBar: AssetPickerAppBar(
-                        backgroundColor: theme.appBarTheme.backgroundColor,
-                        title: title != null
-                            ? Text(
-                                title!,
-                                style: theme.appBarTheme.titleTextStyle,
-                              )
-                            : null,
-                        leading: backButton(context),
-                        actions: <Widget>[confirmButton(context)],
+              ),
+              AnimatedPositioned(
+                top: position,
+                duration: animationDuration,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: topWidgetHeight,
+                  child: AssetPickerAppBarWrapper(
+                    appBar: AssetPickerAppBar(
+                      backgroundColor: theme.appBarTheme.backgroundColor,
+                      title: title != null
+                          ? Text(
+                              title!,
+                              style: theme.appBarTheme.titleTextStyle,
+                            )
+                          : null,
+                      leading: backButton(context),
+                      actions: <Widget>[confirmButton(context)],
+                    ),
+                    body: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: pickerTheme?.canvasColor,
                       ),
-                      body: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: pickerTheme?.canvasColor,
-                        ),
-                        child: Column(
-                          children: [
-                            Listener(
-                              onPointerDown: (_) {
-                                _expandCropView();
-                                // stop scroll event
-                                if (gridScrollController.hasClients) {
-                                  gridScrollController
-                                      .jumpTo(gridScrollController.offset);
-                                }
-                              },
-                              child: CropViewer(
-                                key: _cropViewerKey,
-                                controller: _cropController,
-                                textDelegate: textDelegate,
-                                provider: provider,
-                                opacity: opacity,
-                                height: cropViewHeight(context),
-                                // center the loader in the visible viewport of the crop view
-                                loaderWidget: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: SizedBox(
-                                    height: cropViewVisibleHeight,
-                                    child: Center(
-                                      child: _buildLoader(context, 16),
-                                    ),
+                      child: Column(
+                        children: [
+                          Listener(
+                            onPointerDown: (_) {
+                              _expandCropView();
+                              // stop scroll event
+                              if (gridScrollController.hasClients) {
+                                gridScrollController
+                                    .jumpTo(gridScrollController.offset);
+                              }
+                            },
+                            child: CropViewer(
+                              key: _cropViewerKey,
+                              controller: _cropController,
+                              textDelegate: textDelegate,
+                              provider: provider,
+                              opacity: opacity,
+                              height: cropViewHeight(context),
+                              // center the loader in the visible viewport of the crop view
+                              loaderWidget: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SizedBox(
+                                  height: cropViewVisibleHeight,
+                                  child: Center(
+                                    child: _buildLoader(context, 16),
                                   ),
                                 ),
-                                theme: pickerTheme,
                               ),
+                              theme: pickerTheme,
                             ),
-                            _buildActions(context),
-                          ],
-                        ),
+                          ),
+                          // _buildActions(context),
+                          Consumer<DefaultAssetPickerProvider>(
+                            builder: (context, provider, child) {
+                              final selectedItemCount =
+                                  provider.selectedAssets.length;
+                              return _buildActions(context, selectedItemCount);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                pathEntityListBackdrop(context),
-                _buildListAlbums(context),
-              ],
-            );
-          }),
+              ),
+              pathEntityListBackdrop(context),
+              _buildListAlbums(context),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -576,23 +610,24 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   /// Returns the [ListView] containing the albums
   Widget _buildListAlbums(context) {
     return Consumer<DefaultAssetPickerProvider>(
-        builder: (BuildContext context, provider, __) {
-      if (isAppleOS(context)) return pathEntityListWidget(context);
+      builder: (BuildContext context, provider, __) {
+        if (isAppleOS(context)) pathEntityListWidget(context);
 
-      // NOTE: fix position on android, quite hacky could be optimized
-      return ValueListenableBuilder<bool>(
-        valueListenable: isSwitchingPath,
-        builder: (_, bool isSwitchingPath, Widget? child) =>
-            Transform.translate(
-          offset: isSwitchingPath
-              ? Offset(0, kToolbarHeight + MediaQuery.of(context).padding.top)
-              : Offset.zero,
-          child: Stack(
-            children: [pathEntityListWidget(context)],
+        // NOTE: fix position on android, quite hacky could be optimized
+        return ValueListenableBuilder<bool>(
+          valueListenable: isSwitchingPath,
+          builder: (_, bool isSwitchingPath, Widget? child) =>
+              Transform.translate(
+            offset: isSwitchingPath
+                ? Offset(0, kToolbarHeight + MediaQuery.of(context).padding.top)
+                : Offset.zero,
+            child: Stack(
+              children: [pathEntityListWidget(context)],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   /// Returns the [GridView] displaying the assets
@@ -636,7 +671,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
       decoration: BoxDecoration(
         border: Border.all(color: theme.unselectedWidgetColor, width: 1),
         color: isSelected
-            ? themeColor
+            ? indicatorColor ?? themeColor
             : theme.unselectedWidgetColor.withOpacity(.2),
         shape: BoxShape.circle,
       ),
@@ -645,7 +680,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           duration: duration,
           reverseDuration: duration,
           child: isSelected
-              ? Text((indexSelected + 1).toString())
+              ? Text((indexSelected + 1).toString(), style: indicatorTextStyle)
               : const SizedBox.shrink(),
         ),
       ),
