@@ -89,8 +89,10 @@ mixin InstaPickerInterface on Widget {
   void pickAssets(BuildContext context, {required int maxAssets}) =>
       InstaAssetPicker.pickAssets(
         context,
+        canCrop: false,
         showSelectedCount: true,
         maxAssets: maxAssets,
+        fit: BoxFit.contain,
         indicatorColor: Colors.red,
         confirmIcon: const Icon(Icons.check, color: Colors.red),
         indicatorTextStyle: const TextStyle(

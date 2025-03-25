@@ -240,6 +240,8 @@ class InstaAssetPicker {
   Future<List<AssetEntity>?> restorableAssetsPicker(
     BuildContext context, {
     Key? key,
+    required bool canCrop,
+    BoxFit? fit,
     Color? indicatorColor,
     Color? actionTextColor,
     TextStyle? indicatorTextStyle,
@@ -274,7 +276,9 @@ class InstaAssetPicker {
     _assertRequestType(restoredProvider.requestType);
 
     builder ??= InstaAssetPickerBuilder(
+      canCrop: canCrop,
       onAssetsUpdated: onAssetsUpdated,
+      fit: fit,
       fontFamily: fontFamily,
       actionTextColor: actionTextColor,
       showSelectedCount: showSelectedCount,
@@ -347,6 +351,8 @@ class InstaAssetPicker {
   static Future<List<AssetEntity>?> pickAssets(
     BuildContext context, {
     Key? key,
+    required bool canCrop,
+    BoxFit? fit,
     String? fontFamily,
     Color? actionTextColor,
     TextStyle? indicatorTextStyle,
@@ -403,6 +409,8 @@ class InstaAssetPicker {
     );
 
     final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
+      fit: fit,
+      canCrop: canCrop,
       onAssetsUpdated: onAssetsUpdated,
       fontFamily: fontFamily,
       actionTextColor: actionTextColor,

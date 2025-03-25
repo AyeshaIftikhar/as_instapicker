@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+* `fit` to show the entire asset in the preview
+* `canCrop` will let the developer decide whether the asset can be zoomed in and croppable by user while selecting or not.
+* Use `fit: BoxFit.contain` along with `canCrop:false` for better results.
+
 ## 1.0.1+2
 * Added font family for the picker `fontFamily`
 * Set action bar text color `actionTextColor`

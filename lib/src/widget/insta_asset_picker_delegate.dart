@@ -46,6 +46,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     super.keepScrollOffset,
     super.locale,
     this.onAssetsUpdated,
+    this.fit,
+    required this.canCrop,
   })  : _cropController =
             InstaCropController(keepScrollOffset, config.cropDelegate),
         title = config.title,
@@ -69,6 +71,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           // pathNameBuilder: config.pathNameBuilder,
           shouldRevertGrid: false,
         );
+
+  /// to decide whether the user can crop the asset or not.
+  final bool canCrop;
+
+  /// The [BoxFit] to be used in the crop view for the selected asset to fit
+  final BoxFit? fit;
 
   /// Callback triggered when assets are selected or deselected
   final ValueChanged<List<AssetEntity>>? onAssetsUpdated;
@@ -579,11 +587,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                               }
                             },
                             child: CropViewer(
+                              canCrop: canCrop,
                               key: _cropViewerKey,
                               controller: _cropController,
                               textDelegate: textDelegate,
                               provider: provider,
                               opacity: opacity,
+                              fit: fit,
                               height: cropViewHeight(context),
                               // center the loader in the visible viewport of the crop view
                               loaderWidget: Align(

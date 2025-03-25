@@ -20,6 +20,8 @@ class CropViewer extends StatefulWidget {
     this.opacity = 1.0,
     this.theme,
     this.previewThumbnailSize,
+    this.fit,
+    required this.canCrop,
   });
 
   final DefaultAssetPickerProvider provider;
@@ -29,6 +31,8 @@ class CropViewer extends StatefulWidget {
   final double height, opacity;
   final ThemeData? theme;
   final ThumbnailSize? previewThumbnailSize;
+  final BoxFit? fit;
+  final bool canCrop;
 
   @override
   State<CropViewer> createState() => CropViewerState();
@@ -96,7 +100,9 @@ class CropViewerState extends State<CropViewer> {
               builder: (context, _, __) => Opacity(
                 opacity: widget.opacity,
                 child: InnerCropView(
+                  canCrop: widget.canCrop,
                   cropKey: _cropKey,
+                  fit: widget.fit,
                   asset: asset,
                   cropParam: savedCropParam,
                   controller: widget.controller,
@@ -118,6 +124,7 @@ class CropViewerState extends State<CropViewer> {
 class InnerCropView extends InstaAssetVideoPlayerStatefulWidget {
   const InnerCropView({
     super.key,
+    this.fit,
     required super.asset,
     required this.cropParam,
     required this.controller,
@@ -127,6 +134,7 @@ class InnerCropView extends InstaAssetVideoPlayerStatefulWidget {
     required this.hideCropButton,
     required this.cropKey,
     required this.previewThumbnailSize,
+    required this.canCrop,
   });
 
   final insta_crop_view.CropInternal? cropParam;
@@ -134,9 +142,10 @@ class InnerCropView extends InstaAssetVideoPlayerStatefulWidget {
   final AssetPickerTextDelegate textDelegate;
   final ThemeData? theme;
   final double height;
-  final bool hideCropButton;
+  final bool hideCropButton, canCrop;
   final GlobalKey<insta_crop_view.CropState> cropKey;
   final ThumbnailSize? previewThumbnailSize;
+  final BoxFit? fit;
 
   @override
   State<InnerCropView> createState() => _InnerCropViewState();
@@ -167,28 +176,28 @@ class _InnerCropViewState extends State<InnerCropView>
   }
 
   @override
-  Widget buildLoader() => Transform.scale(
-        scale: widget.asset.orientatedHeight / widget.height,
-        child: Image(
-          // generate video thumbnail (low quality for performances)
-          image: AssetEntityImageProvider(
-            widget.asset,
-            thumbnailSize: widget.previewThumbnailSize != null
-                ? ThumbnailSize(
-                    (widget.previewThumbnailSize!.height *
-                            widget.asset.orientatedSize.aspectRatio)
-                        .toInt(),
-                    widget.previewThumbnailSize!.height.toInt(),
-                  )
-                : ThumbnailSize(
-                    (widget.height * widget.asset.orientatedSize.aspectRatio)
-                        .toInt(),
-                    widget.height.toInt(),
-                  ),
-            isOriginal: false,
-          ),
-        ),
-      );
+  Widget buildLoader() {
+    return Image(
+      // generate video thumbnail (low quality for performances)
+      fit: widget.fit,
+      image: AssetEntityImageProvider(
+        widget.asset,
+        thumbnailSize: widget.previewThumbnailSize != null
+            ? ThumbnailSize(
+                (widget.previewThumbnailSize!.height *
+                        widget.asset.orientatedSize.aspectRatio)
+                    .toInt(),
+                widget.previewThumbnailSize!.height.toInt(),
+              )
+            : ThumbnailSize(
+                (widget.height * widget.asset.orientatedSize.aspectRatio)
+                    .toInt(),
+                widget.height.toInt(),
+              ),
+        isOriginal: false,
+      ),
+    );
+  }
 
   @override
   Widget buildInitializationError() => ScaleText(
@@ -197,7 +206,9 @@ class _InnerCropViewState extends State<InnerCropView>
       );
 
   @override
-  Widget buildVideoPlayer() => VideoPlayer(videoController!);
+  Widget buildVideoPlayer() {
+    return VideoPlayer(videoController!);
+  }
 
   @override
   Widget buildDefault() {
@@ -213,6 +224,23 @@ class _InnerCropViewState extends State<InnerCropView>
     );
   }
 
+  Widget buildVideoPlayerWithFit() {
+    if (videoController == null || !hasLoaded) return buildLoader();
+
+    return AspectRatio(
+      aspectRatio:
+          widget.controller.aspectRatio, // Use the aspect ratio of the video
+      child: FittedBox(
+        fit: widget.fit!, // Ensure the video fits within the parent
+        child: SizedBox(
+          width: videoController!.value.size.width,
+          height: videoController!.value.size.height,
+          child: VideoPlayer(videoController!),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -221,41 +249,76 @@ class _InnerCropViewState extends State<InnerCropView>
           key: ValueKey<String>(widget.asset.id),
           asset: widget.asset,
           isOriginal: true,
-          builder: (BuildContext context, AssetEntity asset) =>
-              insta_crop_view.Crop(
-            key: widget.cropKey,
-            maximumScale: 10,
-            aspectRatio: widget.controller.aspectRatio,
-            disableResize: true,
-            backgroundColor: widget.theme!.canvasColor,
-            initialParam: widget.cropParam,
-            size: widget.asset.orientatedSize,
-            child: widget.asset.type == AssetType.image
-                ? ExtendedImage(
-                    image: AssetEntityImageProvider(
-                      widget.asset,
-                      isOriginal: true,
-                    ),
-                    loadStateChanged: (ExtendedImageState state) {
-                      switch (state.extendedImageLoadState) {
-                        case LoadState.completed:
-                          onLoading(false);
-                          onError(false);
-                          return state.completedWidget;
-                        case LoadState.loading:
-                          onLoading(true);
-                          onError(false);
-                          return buildLoader();
-                        case LoadState.failed:
-                          onLoading(false);
-                          onError(true);
-                          return buildLoader();
-                      }
-                    },
-                  )
-                // build video
-                : buildDefault(),
-          ),
+          builder: (BuildContext context, AssetEntity asset) => widget.canCrop
+              ? insta_crop_view.Crop(
+                  key: widget.cropKey,
+                  maximumScale: 10,
+                  disableResize: true,
+                  initialParam: widget.cropParam,
+                  size: widget.asset.orientatedSize,
+                  aspectRatio: widget.controller.aspectRatio,
+                  backgroundColor: widget.theme!.canvasColor,
+                  child: widget.asset.type == AssetType.image
+                      ? ExtendedImage(
+                          fit: widget.fit,
+                          image: AssetEntityImageProvider(
+                            widget.asset,
+                            isOriginal: true,
+                          ),
+                          loadStateChanged: (ExtendedImageState state) {
+                            switch (state.extendedImageLoadState) {
+                              case LoadState.completed:
+                                onLoading(false);
+                                onError(false);
+                                return state.completedWidget;
+                              case LoadState.loading:
+                                onLoading(true);
+                                onError(false);
+                                return buildLoader();
+                              case LoadState.failed:
+                                onLoading(false);
+                                onError(true);
+                                return buildLoader();
+                            }
+                          },
+                        )
+                      : widget.fit == null
+                          ? buildDefault()
+                          : buildVideoPlayerWithFit(), // build video
+                )
+              : AspectRatio(
+                  aspectRatio: widget.controller.aspectRatio,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: widget.asset.type == AssetType.image
+                        ? ExtendedImage(
+                            fit: widget.fit,
+                            image: AssetEntityImageProvider(
+                              widget.asset,
+                              isOriginal: true,
+                            ),
+                            loadStateChanged: (ExtendedImageState state) {
+                              switch (state.extendedImageLoadState) {
+                                case LoadState.completed:
+                                  onLoading(false);
+                                  onError(false);
+                                  return state.completedWidget;
+                                case LoadState.loading:
+                                  onLoading(true);
+                                  onError(false);
+                                  return buildLoader();
+                                case LoadState.failed:
+                                  onLoading(false);
+                                  onError(true);
+                                  return buildLoader();
+                              }
+                            },
+                          )
+                        : widget.fit == null
+                            ? buildDefault()
+                            : buildVideoPlayerWithFit(),
+                  ),
+                ),
         ),
 
         ValueListenableBuilder<bool>(
@@ -273,20 +336,22 @@ class _InnerCropViewState extends State<InnerCropView>
         ),
 
         // Build crop aspect ratio button
-        Positioned(
-          left: 12,
-          right: 12,
-          bottom: 12,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              widget.hideCropButton
-                  ? const SizedBox.shrink()
-                  : _buildCropButton(),
-              if (widget.asset.type == AssetType.video) _buildPlayVideoButton(),
-            ],
+        if (widget.canCrop)
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 12,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                widget.hideCropButton
+                    ? const SizedBox.shrink()
+                    : _buildCropButton(),
+                if (widget.asset.type == AssetType.video)
+                  _buildPlayVideoButton(),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

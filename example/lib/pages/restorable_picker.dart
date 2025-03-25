@@ -40,6 +40,7 @@ class _PickerScreenState extends State<RestorablePicker> {
     final List<AssetEntity>? result =
         await _instaAssetsPicker.restorableAssetsPicker(
       context,
+      canCrop: false,
       showSelectedCount: false,
       indicatorTextStyle:
           const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

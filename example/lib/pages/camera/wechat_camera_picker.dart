@@ -42,6 +42,7 @@ class WeChatCameraPicker extends StatelessWidget with InstaPickerInterface {
         context,
         onPressed: () => InstaAssetPicker.pickAssets(
           context,
+          canCrop: true,
           indicatorTextStyle:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           indicatorColor: Colors.red,
