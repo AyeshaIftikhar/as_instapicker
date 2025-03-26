@@ -206,8 +206,6 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
       });
     }
 
-    // when asset list is available and no asset is selected,
-    // preview the first of the list
     if (shouldDisplayAssets && p.selectedAssets.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final list =
@@ -217,6 +215,27 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
         }
       });
     }
+    // if (!_mounted || _cropController.previewAsset.value != null) return;
+
+    // if (p.selectedAssets.isNotEmpty) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     if (_mounted) {
+    //       _cropController.previewAsset.value = p.selectedAssets.last;
+    //     }
+    //   });
+    // }
+
+    // // when asset list is available and no asset is selected,
+    // // preview the first of the list
+    // if (shouldDisplayAssets && p.selectedAssets.isEmpty) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     final list =
+    //         await p.currentPath?.path.getAssetListRange(start: 0, end: 1);
+    //     if (_mounted && (list?.isNotEmpty ?? false)) {
+    //       _cropController.previewAsset.value = list!.first;
+    //     }
+    //   });
+    // }
   }
 
   /// Called when the asset thumbnail is tapped
@@ -226,9 +245,24 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int? index,
     AssetEntity currentAsset,
   ) async {
+    // if (index == null) return;
+    // if (_cropController.isCropViewReady.value != true) return;
+    // // if is preview asset, unselect it
+    // if (provider.selectedAssets.isNotEmpty &&
+    //     _cropController.previewAsset.value == currentAsset) {
+    //   selectAsset(context, currentAsset, index, true);
+    //   _cropController.previewAsset.value = provider.selectedAssets.isEmpty
+    //       ? currentAsset
+    //       : provider.selectedAssets.last;
+    //   return;
+    // }
+
+    // _cropController.previewAsset.value = currentAsset;
+    // selectAsset(context, currentAsset, index, false);
     if (index == null) return;
-    if (_cropController.isCropViewReady.value != true) return;
-    // if is preview asset, unselect it
+    if (canCrop && _cropController.isCropViewReady.value != true) return;
+
+    // If the asset is already the preview asset, unselect it
     if (provider.selectedAssets.isNotEmpty &&
         _cropController.previewAsset.value == currentAsset) {
       selectAsset(context, currentAsset, index, true);
@@ -250,13 +284,34 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int index,
     bool selected,
   ) async {
-    if (_cropController.isCropViewReady.value != true) return;
+    //   if (_cropController.isCropViewReady.value != true) return;
+
+    //   final thumbnailPosition = indexPosition(context, index);
+    //   final prevCount = provider.selectedAssets.length;
+    //   await super.selectAsset(context, asset, index, selected);
+
+    //   // update preview asset with selected
+    //   final selectedAssets = provider.selectedAssets;
+    //   if (prevCount < selectedAssets.length) {
+    //     _cropController.previewAsset.value = asset;
+    //   } else if (selected &&
+    //       asset == _cropController.previewAsset.value &&
+    //       selectedAssets.isNotEmpty) {
+    //     _cropController.previewAsset.value = selectedAssets.last;
+    //   }
+
+    //   if (onAssetsUpdated != null) {
+    //     onAssetsUpdated!(provider.selectedAssets);
+    //   }
+
+    //   _expandCropView(thumbnailPosition);
+    if (canCrop && _cropController.isCropViewReady.value != true) return;
 
     final thumbnailPosition = indexPosition(context, index);
     final prevCount = provider.selectedAssets.length;
     await super.selectAsset(context, asset, index, selected);
 
-    // update preview asset with selected
+    // Update preview asset with selected
     final selectedAssets = provider.selectedAssets;
     if (prevCount < selectedAssets.length) {
       _cropController.previewAsset.value = asset;
@@ -451,8 +506,10 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   /// Calls [onConfirm]
   @override
   Widget confirmButton(BuildContext context) {
+    final ValueNotifier<bool> isCropViewReadyNotifier =
+        canCrop ? _cropController.isCropViewReady : ValueNotifier<bool>(true);
     final Widget button = ValueListenableBuilder<bool>(
-      valueListenable:canCrop? _cropController.isCropViewReady: ValueNotifier<bool>(true),
+      valueListenable: isCropViewReadyNotifier,
       builder: (_, isLoaded, __) => Consumer<DefaultAssetPickerProvider>(
         builder: (_, DefaultAssetPickerProvider p, __) {
           return TextButton(
@@ -608,7 +665,6 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
                               theme: pickerTheme,
                             ),
                           ),
-                          // _buildActions(context),
                           Consumer<DefaultAssetPickerProvider>(
                             builder: (context, provider, child) {
                               final selectedItemCount =
