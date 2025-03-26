@@ -452,7 +452,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
   @override
   Widget confirmButton(BuildContext context) {
     final Widget button = ValueListenableBuilder<bool>(
-      valueListenable: _cropController.isCropViewReady,
+      valueListenable:canCrop? _cropController.isCropViewReady: ValueNotifier<bool>(true),
       builder: (_, isLoaded, __) => Consumer<DefaultAssetPickerProvider>(
         builder: (_, DefaultAssetPickerProvider p, __) {
           return TextButton(
