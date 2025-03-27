@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2+1
+* fixed asset selection and asset preview issue when the cropping is diabled.
+
 ## 1.0.2
 * `fit` to show the entire asset in the preview
 * `canCrop` will let the developer decide whether the asset can be zoomed in and croppable by user while selecting or not.
