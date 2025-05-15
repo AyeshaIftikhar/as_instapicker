@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import ffmpeg_kit_flutter_min
+import ffmpeg_kit_flutter_new
 import path_provider_foundation
 import photo_manager
 import video_player_avfoundation

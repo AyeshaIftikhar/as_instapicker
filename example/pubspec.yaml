@@ -46,7 +46,7 @@ dependencies:
   wechat_camera_picker: ^4.3.1
 
   # for video examples
-  ffmpeg_kit_flutter_min: ^6.0.3
+  ffmpeg_kit_flutter_new: ^1.0.3
   mime: ^1.0.5
   permission_handler: 
   path_provider:

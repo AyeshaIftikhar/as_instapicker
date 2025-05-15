@@ -1,0 +1,2 @@
+/Users/macbookpro/Desktop/GitHub/as_instapicker/example/android/app/.cxx/RelWithDebInfo/p6eg153o/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/macbookpro/Desktop/GitHub/as_instapicker/example/android/app/.cxx/RelWithDebInfo/p6eg153o/arm64-v8a/CMakeFiles/rebuild_cache.dir
