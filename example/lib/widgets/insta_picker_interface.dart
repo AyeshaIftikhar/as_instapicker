@@ -90,6 +90,8 @@ mixin InstaPickerInterface on Widget {
       InstaAssetPicker.pickAssets(
         context,
         canCrop: false,
+        restrictVideoDuration: true,
+        restrictVideoDurationMax: 60,
         showSelectedCount: true,
         maxAssets: maxAssets,
         fit: BoxFit.contain,

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.3
+* Restrict video durations 
+
 ## 1.0.2+1
 * fixed asset selection and asset preview issue when the cropping is diabled.
 

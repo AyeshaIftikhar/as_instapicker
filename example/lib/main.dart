@@ -67,7 +67,7 @@ class PickersScreen extends StatelessWidget {
     final List<InstaPickerInterface> pickers = [
       const SinglePicker(),
       const MultiplePicker(),
-      const RestorablePicker(),
+      const RestorablePicker(restrictVideoDuration: false),
       const CameraPicker(),
       const WeChatCameraPicker(),
     ];

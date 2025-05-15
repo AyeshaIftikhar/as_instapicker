@@ -9,7 +9,7 @@ PODS:
     - ffmpeg-kit-ios-min (= 6.0)
     - Flutter
   - Flutter (1.0.0)
-  - instacrop (0.0.1):
+  - "instacrop (1.0.0+3)":
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
@@ -65,7 +65,7 @@ SPEC CHECKSUMS:
   ffmpeg-kit-ios-min: 29195b571253df57ab6c4bf002a4d648efa1166a
   ffmpeg_kit_flutter_min: 82daaf8877c99bf42173212aa72c1e20a45f28d3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  instacrop: 3abe885e9c72aa5bb83479ccf94bc7f8824c54c7
+  instacrop: bd440ee1904270cc314212660299b08621abdde0
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../widgets/crop_result_view.dart';
 
 class RestorablePicker extends StatefulWidget with InstaPickerInterface {
-  const RestorablePicker({super.key});
+  const RestorablePicker({super.key, required this.restrictVideoDuration});
+  final bool restrictVideoDuration;
 
   @override
   PickerDescription get description => const PickerDescription(
@@ -41,6 +42,8 @@ class _PickerScreenState extends State<RestorablePicker> {
         await _instaAssetsPicker.restorableAssetsPicker(
       context,
       canCrop: false,
+      restrictVideoDurationMax: 60,
+      restrictVideoDuration: widget.restrictVideoDuration,
       showSelectedCount: false,
       indicatorTextStyle:
           const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

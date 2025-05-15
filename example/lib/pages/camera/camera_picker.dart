@@ -112,6 +112,8 @@ class _CameraPickerState extends State<CameraPicker> {
         context,
         onPressed: () => InstaAssetPicker.pickAssets(
           context,
+          restrictVideoDuration: true,
+          restrictVideoDurationMax: 60,
           canCrop: true,
           pickerConfig: InstaAssetPickerConfig(
             title: widget.description.fullLabel,

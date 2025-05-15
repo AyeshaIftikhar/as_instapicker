@@ -37,6 +37,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     this.indicatorColor,
     this.indicatorTextStyle,
     this.actionTextColor,
+    required this.restrictVideoDurationMax,
+    required this.restrictVideoDuration,
     required super.initialPermission,
     required super.provider,
     required this.onCompleted,
@@ -71,6 +73,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           // pathNameBuilder: config.pathNameBuilder,
           shouldRevertGrid: false,
         );
+
+  /// Whether to restrict video selection to videos 60 seconds or shorter
+  final int restrictVideoDurationMax;
+
+  /// Whether to restrict video selection to videos 60 seconds or shorter
+  final bool restrictVideoDuration;
 
   /// to decide whether the user can crop the asset or not.
   final bool canCrop;
@@ -215,27 +223,6 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
         }
       });
     }
-    // if (!_mounted || _cropController.previewAsset.value != null) return;
-
-    // if (p.selectedAssets.isNotEmpty) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     if (_mounted) {
-    //       _cropController.previewAsset.value = p.selectedAssets.last;
-    //     }
-    //   });
-    // }
-
-    // // when asset list is available and no asset is selected,
-    // // preview the first of the list
-    // if (shouldDisplayAssets && p.selectedAssets.isEmpty) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //     final list =
-    //         await p.currentPath?.path.getAssetListRange(start: 0, end: 1);
-    //     if (_mounted && (list?.isNotEmpty ?? false)) {
-    //       _cropController.previewAsset.value = list!.first;
-    //     }
-    //   });
-    // }
   }
 
   /// Called when the asset thumbnail is tapped
@@ -245,21 +232,14 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int? index,
     AssetEntity currentAsset,
   ) async {
-    // if (index == null) return;
-    // if (_cropController.isCropViewReady.value != true) return;
-    // // if is preview asset, unselect it
-    // if (provider.selectedAssets.isNotEmpty &&
-    //     _cropController.previewAsset.value == currentAsset) {
-    //   selectAsset(context, currentAsset, index, true);
-    //   _cropController.previewAsset.value = provider.selectedAssets.isEmpty
-    //       ? currentAsset
-    //       : provider.selectedAssets.last;
-    //   return;
-    // }
-
-    // _cropController.previewAsset.value = currentAsset;
-    // selectAsset(context, currentAsset, index, false);
     if (index == null) return;
+    // Check if the asset is a video and its duration exceeds 60 seconds
+    if (currentAsset.type == AssetType.video &&
+        restrictVideoDuration &&
+        currentAsset.videoDuration.inSeconds > 60) {
+      return; // Prevent interaction
+    }
+
     if (canCrop && _cropController.isCropViewReady.value != true) return;
 
     // If the asset is already the preview asset, unselect it
@@ -284,27 +264,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int index,
     bool selected,
   ) async {
-    //   if (_cropController.isCropViewReady.value != true) return;
-
-    //   final thumbnailPosition = indexPosition(context, index);
-    //   final prevCount = provider.selectedAssets.length;
-    //   await super.selectAsset(context, asset, index, selected);
-
-    //   // update preview asset with selected
-    //   final selectedAssets = provider.selectedAssets;
-    //   if (prevCount < selectedAssets.length) {
-    //     _cropController.previewAsset.value = asset;
-    //   } else if (selected &&
-    //       asset == _cropController.previewAsset.value &&
-    //       selectedAssets.isNotEmpty) {
-    //     _cropController.previewAsset.value = selectedAssets.last;
-    //   }
-
-    //   if (onAssetsUpdated != null) {
-    //     onAssetsUpdated!(provider.selectedAssets);
-    //   }
-
-    //   _expandCropView(thumbnailPosition);
+    // Check if the asset is a video and its duration exceeds 60 seconds
+    if (asset.type == AssetType.video &&
+        restrictVideoDuration &&
+        asset.videoDuration.inSeconds > 60) {
+      return; // Prevent selection
+    }
     if (canCrop && _cropController.isCropViewReady.value != true) return;
 
     final thumbnailPosition = indexPosition(context, index);
@@ -747,6 +712,11 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     final int indexSelected = selectedAssets.indexOf(asset);
     final bool isSelected = indexSelected != -1;
 
+    // Check if the asset is a video and its duration exceeds 60 seconds
+    final bool isDisabled = asset.type == AssetType.video &&
+        restrictVideoDuration &&
+        asset.videoDuration.inSeconds > 60;
+
     final Widget innerSelector = AnimatedContainer(
       duration: duration,
       width: _kIndicatorSize,
@@ -756,7 +726,9 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
         border: Border.all(color: theme.unselectedWidgetColor, width: 1),
         color: isSelected
             ? indicatorColor ?? themeColor
-            : theme.unselectedWidgetColor.withOpacity(.2),
+            : isDisabled
+                ? Colors.black
+                : theme.unselectedWidgetColor.withOpacity(.2),
         shape: BoxShape.circle,
       ),
       child: FittedBox(
@@ -766,10 +738,8 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           child: isSelected
               ? Text(
                   (indexSelected + 1).toString(),
-                  style: indicatorTextStyle ??
-                      TextStyle(
-                        fontFamily: fontFamily,
-                      ),
+                  style:
+                      indicatorTextStyle ?? TextStyle(fontFamily: fontFamily),
                 )
               : const SizedBox.shrink(),
         ),
@@ -783,26 +753,32 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
 
         return Positioned.fill(
           child: GestureDetector(
-            onTap: isPreviewEnabled
-                ? () => viewAsset(context, index, asset)
-                : null,
+            onTap: isDisabled
+                ? null // Disable tap for long videos
+                : isPreviewEnabled
+                    ? () => viewAsset(context, index, asset)
+                    : null,
             child: AnimatedContainer(
               duration: switchingPathDuration,
               padding: const EdgeInsets.all(4),
-              color: isPreview
-                  ? theme.unselectedWidgetColor.withOpacity(.5)
-                  : theme.colorScheme.surface.withOpacity(.1),
-              child: Align(
-                alignment: AlignmentDirectional.topEnd,
-                child: isSelected && !isSingleAssetMode
-                    ? GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () =>
-                            selectAsset(context, asset, index, isSelected),
-                        child: innerSelector,
-                      )
-                    : innerSelector,
-              ),
+              color: isDisabled
+                  ? Colors.black.withOpacity(0.3)
+                  : isPreview
+                      ? theme.unselectedWidgetColor.withOpacity(.5)
+                      : theme.colorScheme.surface.withOpacity(.1),
+              child: isDisabled
+                  ? null
+                  : Align(
+                      alignment: AlignmentDirectional.topEnd,
+                      child: isSelected && !isSingleAssetMode
+                          ? GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => selectAsset(
+                                  context, asset, index, isSelected),
+                              child: innerSelector,
+                            )
+                          : innerSelector,
+                    ),
             ),
           ),
         );
