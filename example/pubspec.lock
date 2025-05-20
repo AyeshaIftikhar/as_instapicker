@@ -7,7 +7,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.3+2"
   async:
     dependency: transitive
     description:
@@ -256,10 +256,10 @@ packages:
     dependency: transitive
     description:
       name: instacrop
-      sha256: "57beb8247b8684feddb13bf760cb09d16fda044663d6e51dd503334b83e7176d"
+      sha256: e9cf09e2247b589477de2968b8efa9d891720603a7fd6c226da95259a1685a1a
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.1+1"
   intl:
     dependency: transitive
     description:
