@@ -1,12 +1,10 @@
 PODS:
   - camera_avfoundation (0.0.1):
     - Flutter
-  - ffmpeg-kit-ios-min (6.0)
-  - ffmpeg_kit_flutter_min (6.0.3):
-    - ffmpeg_kit_flutter_min/min (= 6.0.3)
+  - ffmpeg_kit_flutter_new (1.0.0):
+    - ffmpeg_kit_flutter_new/full-gpl-lts (= 1.0.0)
     - Flutter
-  - ffmpeg_kit_flutter_min/min (6.0.3):
-    - ffmpeg-kit-ios-min (= 6.0)
+  - ffmpeg_kit_flutter_new/full-gpl-lts (1.0.0):
     - Flutter
   - Flutter (1.0.0)
   - "instacrop (1.0.0+3)":
@@ -27,7 +25,7 @@ PODS:
 
 DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
-  - ffmpeg_kit_flutter_min (from `.symlinks/plugins/ffmpeg_kit_flutter_min/ios`)
+  - ffmpeg_kit_flutter_new (from `.symlinks/plugins/ffmpeg_kit_flutter_new/ios`)
   - Flutter (from `Flutter`)
   - instacrop (from `.symlinks/plugins/instacrop/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -36,15 +34,11 @@ DEPENDENCIES:
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
 
-SPEC REPOS:
-  trunk:
-    - ffmpeg-kit-ios-min
-
 EXTERNAL SOURCES:
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
-  ffmpeg_kit_flutter_min:
-    :path: ".symlinks/plugins/ffmpeg_kit_flutter_min/ios"
+  ffmpeg_kit_flutter_new:
+    :path: ".symlinks/plugins/ffmpeg_kit_flutter_new/ios"
   Flutter:
     :path: Flutter
   instacrop:
@@ -61,15 +55,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player_avfoundation/darwin"
 
 SPEC CHECKSUMS:
-  camera_avfoundation: 04b44aeb14070126c6529e5ab82cc7c9fca107cf
-  ffmpeg-kit-ios-min: 29195b571253df57ab6c4bf002a4d648efa1166a
-  ffmpeg_kit_flutter_min: 82daaf8877c99bf42173212aa72c1e20a45f28d3
+  camera_avfoundation: be3be85408cd4126f250386828e9b1dfa40ab436
+  ffmpeg_kit_flutter_new: 97b2c798a30c08fac1381ff76202fd67d325df2f
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   instacrop: bd440ee1904270cc314212660299b08621abdde0
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413
-  sensors_plus: 3c3bac724a2128c895623e03efd82cf0e94fd8e8
+  sensors_plus: 6a11ed0c2e1d0bd0b20b4029d3bad27d96e0c65b
   video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
 
 PODFILE CHECKSUM: 882d9ce5317f55961d4986c6fa0e89bdf2857673

@@ -45,6 +45,7 @@ class WeChatCameraPicker extends StatelessWidget with InstaPickerInterface {
           canCrop: true,
           restrictVideoDuration: true,
           restrictVideoDurationMax: 60,
+          minVideoDuration: 10,
           indicatorTextStyle:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           indicatorColor: Colors.red,

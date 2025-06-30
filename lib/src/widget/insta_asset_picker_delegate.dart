@@ -50,6 +50,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     this.onAssetsUpdated,
     this.fit,
     required this.canCrop,
+    this.minVideoDuration,
   })  : _cropController =
             InstaCropController(keepScrollOffset, config.cropDelegate),
         title = config.title,
@@ -73,6 +74,9 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
           // pathNameBuilder: config.pathNameBuilder,
           shouldRevertGrid: false,
         );
+
+  /// The minimum duration of the video in seconds
+  final int? minVideoDuration;
 
   /// Whether to restrict video selection to videos 60 seconds or shorter
   final int restrictVideoDurationMax;
@@ -233,6 +237,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     AssetEntity currentAsset,
   ) async {
     if (index == null) return;
+
+    // Check if the video duration is less than the minimum required
+    if (minVideoDuration != null &&
+        currentAsset.type == AssetType.video &&
+        currentAsset.videoDuration.inSeconds < minVideoDuration!) {
+      return; // Prevent preview
+    }
     // Check if the asset is a video and its duration exceeds 60 seconds
     if (currentAsset.type == AssetType.video &&
         restrictVideoDuration &&
@@ -264,6 +275,13 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     int index,
     bool selected,
   ) async {
+    // Restrict by minimum duration
+    if (minVideoDuration != null &&
+        asset.type == AssetType.video &&
+        asset.videoDuration.inSeconds < minVideoDuration!) {
+      return; // Prevent selection
+    }
+
     // Check if the asset is a video and its duration exceeds 60 seconds
     if (asset.type == AssetType.video &&
         restrictVideoDuration &&
@@ -712,6 +730,9 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
     final int indexSelected = selectedAssets.indexOf(asset);
     final bool isSelected = indexSelected != -1;
 
+    final bool isMinDisabled = minVideoDuration != null &&
+        asset.type == AssetType.video &&
+        asset.videoDuration.inSeconds < minVideoDuration!;
     // Check if the asset is a video and its duration exceeds 60 seconds
     final bool isDisabled = asset.type == AssetType.video &&
         restrictVideoDuration &&
@@ -753,7 +774,7 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
 
         return Positioned.fill(
           child: GestureDetector(
-            onTap: isDisabled
+            onTap: isMinDisabled || isDisabled
                 ? null // Disable tap for long videos
                 : isPreviewEnabled
                     ? () => viewAsset(context, index, asset)
@@ -761,12 +782,12 @@ class InstaAssetPickerBuilder extends DefaultAssetPickerBuilderDelegate {
             child: AnimatedContainer(
               duration: switchingPathDuration,
               padding: const EdgeInsets.all(4),
-              color: isDisabled
+              color: isMinDisabled || isDisabled
                   ? Colors.black.withOpacity(0.3)
                   : isPreview
                       ? theme.unselectedWidgetColor.withOpacity(.5)
                       : theme.colorScheme.surface.withOpacity(.1),
-              child: isDisabled
+              child: isMinDisabled || isDisabled
                   ? null
                   : Align(
                       alignment: AlignmentDirectional.topEnd,

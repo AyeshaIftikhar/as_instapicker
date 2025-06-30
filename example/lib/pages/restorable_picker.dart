@@ -42,6 +42,7 @@ class _PickerScreenState extends State<RestorablePicker> {
         await _instaAssetsPicker.restorableAssetsPicker(
       context,
       canCrop: false,
+      minVideoDuration: 10,
       restrictVideoDurationMax: 60,
       restrictVideoDuration: widget.restrictVideoDuration,
       showSelectedCount: false,

@@ -240,6 +240,7 @@ class InstaAssetPicker {
   Future<List<AssetEntity>?> restorableAssetsPicker(
     BuildContext context, {
     Key? key,
+    int? minVideoDuration,
     required int restrictVideoDurationMax,
     required bool restrictVideoDuration,
     required bool canCrop,
@@ -278,6 +279,7 @@ class InstaAssetPicker {
     _assertRequestType(restoredProvider.requestType);
 
     builder ??= InstaAssetPickerBuilder(
+      minVideoDuration: minVideoDuration,
       restrictVideoDurationMax: restrictVideoDurationMax,
       restrictVideoDuration: restrictVideoDuration,
       canCrop: canCrop,
@@ -356,6 +358,7 @@ class InstaAssetPicker {
     BuildContext context, {
     Key? key,
     required bool canCrop,
+    int? minVideoDuration,
     required bool restrictVideoDuration,
     required int restrictVideoDurationMax,
     BoxFit? fit,
@@ -417,6 +420,7 @@ class InstaAssetPicker {
     final InstaAssetPickerBuilder builder = InstaAssetPickerBuilder(
       restrictVideoDuration: restrictVideoDuration,
       restrictVideoDurationMax: restrictVideoDurationMax,
+      minVideoDuration: minVideoDuration,
       fit: fit,
       canCrop: canCrop,
       onAssetsUpdated: onAssetsUpdated,
